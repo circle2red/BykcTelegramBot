@@ -195,11 +195,10 @@ class ReceivedCourseData:
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     logging.info(f"handler called: start")
-    message = "你好呀~我是北航博雅课程小助手喵！我可以帮你完成以下操作：\n" \
-              "/query_avail 查询可选课程\n\n" \
-              "/query_chosen 查询已选课程\n\n" \
-              "/preferences 修改偏好配置\n\n" \
-              "/status 查看系统当前运行状态"
+    message = "你好呀~我是北航博雅课程小助手Hayase Yuuka！我可以帮你完成以下操作：\n\n" \
+              "/start 查看帮助\n" \
+              "/query_avail 查询可选课程\n" \
+              "/query_chosen 查询已选课程\n"
     await update.message.reply_text(message)
 
 
