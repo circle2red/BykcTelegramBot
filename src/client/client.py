@@ -48,15 +48,32 @@ class Client:
         """
         login through sso
         """
+        headers = {
+            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+            'accept-language': 'en',
+            'cache-control': 'max-age=0',
+            'dnt': '1',
+            'priority': 'u=0, i',
+            'referer': 'https://sso.buaa.edu.cn/',
+            'sec-ch-ua': '"Chromium";v="130", "Google Chrome";v="130", "Not?A_Brand";v="99"',
+            'sec-ch-ua-mobile': '?0',
+            'sec-ch-ua-platform': '"Windows"',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'same-site',
+            'sec-fetch-user': '?1',
+            'upgrade-insecure-requests': '1',
+            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36'
+        }
         try:
             async with httpx.AsyncClient() as session:
                 # 第一次调用SSO登录，获取所谓ZeroTrustEngine的Cookie
                 url = config.get('bykc_root') + "/system/home"
                 url = await SsoApi(self.username, self.password).login_sso(url)
-                await session.get(url, follow_redirects=False)  # manually redirect
-                if not session.cookies.get('ZeroTrustEngine'):
+                await session.get(url, headers=headers, follow_redirects=False)  # manually redirect
+                if not session.cookies.get('JSESSIONID'):
                     raise LoginError("登录错误:未找到ZeroTrustEngine")
-                self.zero_trust_engine = session.cookies.get('ZeroTrustEngine')
+                self.zero_trust_engine = session.cookies.get('JSESSIONID')
                 storage.set('zero_trust_engine', self.zero_trust_engine)
 
                 # 第二次调用SSO登录，获取所谓token
@@ -128,7 +145,7 @@ class Client:
         headers = {
             'Content-Type': 'application/json;charset=utf-8',
             'User-Agent': config.get('user_agent'),
-            'Cookie': f'ZeroTrustEngine={self.zero_trust_engine}',
+            'Cookie': f'JSESSIONID={self.zero_trust_engine}',
             'auth_token': self.token,
             'authtoken': self.token,
             'ak': ak,

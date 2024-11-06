@@ -20,10 +20,19 @@ class SsoApi:
         self._url = ''
 
     async def __get_execution(self):
-        resp = await self._session.get(self._url, follow_redirects=True)
+        # 原有的获取execution的方法已经失效，似乎是因为现在采用的是JS重定向，所以需要手动获取
+        # 因为self._url = https://bykc.buaa.edu.cn/system/home
+        # 这里sso的载荷里是另一个url，因此不再根据self._url生成，此函数请避免其他地方调用
+        redirect_url = "https://sso.buaa.edu.cn/login?noAutoRedirect=true&service=https%3A%2F%2Fbykc.buaa.edu.cn%2Fsscv%2Fcas%2Flogin"
+        resp = await self._session.get(redirect_url)
         result = patterns.execution.search(resp.text)
         assert result, 'unexpected behavior: execution code not retrieved'
         return result.group(1)
+
+        # resp = await self._session.get(self._url, follow_redirects=True)
+        # result = patterns.execution.search(resp.text)
+        # assert result, 'unexpected behavior: execution code not retrieved'
+        # return result.group(1)
 
     async def __get_login_form(self):
         return {

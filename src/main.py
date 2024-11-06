@@ -610,7 +610,8 @@ if __name__ == '__main__':
     ))
     application_builder.token(config.get('telegram_token'))
     if config.get('proxy_url'):
-        application_builder.proxy_url(config.get('proxy_url'))
+        proxy_url = config.get('proxy_url')
+        application_builder.proxy(proxy_url).get_updates_proxy(proxy_url)
     application = application_builder.build()
 
     init_handlers(application)

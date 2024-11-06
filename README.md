@@ -47,7 +47,7 @@ v0.1.3
     "sso_username": "你的统一认证学号",
     "sso_password": "你的统一认证密码",
     "telegram_token": "你在@BotFather处获取的token",
-    "proxy_path": "若使用代理则填入，形如http://127.0.0.1:8080，否则填空串",
+    "proxy_url": "若使用代理则填入，形如http://127.0.0.1:8080，否则填空串",
     "telegram_owner_id": "你的telegram id，可以先不填，运行后找机器人要"
 }
 ```
